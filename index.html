@@ -15,8 +15,8 @@
 
         .base-timer {
             position: relative;
-/*             width: 300px; */
-/*             height: 300px; */
+            /* width: 300px;
+            height: 300px; */
             width: 450px;
             height: 450px;
         }
@@ -27,6 +27,8 @@
 
         .base-timer__circle {
             fill: none;
+            /* fill: #EBEBEB; */
+            /* fill: #CCBFBC; */
             stroke: none;
         }
 
@@ -34,6 +36,7 @@
             stroke-width: 7px;
             stroke: #EBEBEB;
             /* grey; */
+            /* stroke: white; */
         }
 
         .base-timer__path-remaining {
@@ -48,7 +51,9 @@
 
         .base-timer__path-remaining.green {
             /* color: rgb(65, 184, 131); */
+            /* color: #EBEBEB; */
             color: #CCBFBC;
+            /* color: white; */
             /* color: #d3bcb2; */
             
         }
@@ -65,7 +70,7 @@
 
         .base-timer__label {
             position: absolute;
-/*             width: 300px;
+            /* width: 300px;
             height: 300px; */
             width: 450px;
             height: 450px;
@@ -78,11 +83,145 @@
 
     </style>
     <title>Timer</title>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
+
 </head>
 <body>
     <div id="app"></div>
+    
+    <!-- <div class="timer"></div> -->
     <!-- <script type="text/javascript"> -->
+    <!-- <script src="//code.jquery.com/jquery.min.js"></script>
+    <script src="circular-countdown.js"></script> -->
+    <script src="NoSleep.min.js"></script>
+
     <script>
+        // iOS: 
+        // https://github.com/richtr/NoSleep.js
+        var noSleep = new NoSleep();
+        // Enable wake lock.
+        // (must be wrapped in a user input event handler e.g. a mouse or touch handler)
+        document.addEventListener('click', function enableNoSleep() {
+            document.removeEventListener('click', enableNoSleep, false);
+            noSleep.enable();
+            console.log("noSleep enabled");
+        }, false);
+
+        // CHROME:
+            // test support
+        let isSupported = false;
+
+        if ('wakeLock' in navigator) {
+            isSupported = true;
+            // statusElem.textContent = 'Screen Wake Lock API supported 🎉';
+        } else {
+            // if (wakeButton) {
+            //     wakeButton.disabled = true;
+            // }
+            // statusElem.textContent = 'Wake lock is not supported by this browser.';
+        }
+
+        if (isSupported) {
+        // create a reference for the wake lock
+            let wakeLock = null;
+
+            // create an async function to request a wake lock
+            const requestWakeLock = async () => {
+                try {
+                    wakeLock = await navigator.wakeLock.request('screen');
+
+                    // change up our interface to reflect wake lock active
+                    changeUI();
+
+                    // listen for our release event
+                    wakeLock.onrelease = function(ev) {
+                        console.log(ev);
+                    }
+                    // wakeLock.addEventListener('release', () => {
+                    //     // if wake lock is released alter the button accordingly
+                    //     changeUI('released');
+                    // });
+
+                } catch (err) {
+                    // if wake lock request fails - usually system related, such as battery
+                    // wakeButton.dataset.status = 'off';
+                    // wakeButton.textContent = 'Turn Wake Lock ON';
+                    // statusElem.textContent = `${err.name}, ${err.message}`;
+                }
+            } // requestWakeLock()
+
+            // if we click our button
+            // wakeButton.addEventListener('click', () => {
+            //     // if wakelock is off request it
+            //     if (wakeButton.dataset.status === 'off') {
+            //     requestWakeLock()
+            //     } else { // if it's on release it
+            //     wakeLock.release()
+            //         .then(() => {
+            //         wakeLock = null;
+            //         })
+            //     }
+            // })
+
+            // const handleVisibilityChange = () => {
+            //     if (wakeLock !== null && document.visibilityState === 'visible') {
+            //     requestWakeLock();
+            //     }
+            // }
+
+            // reaquireCheck.addEventListener('change', () => {
+            //     if (reaquireCheck.checked) {
+            //         document.addEventListener('visibilitychange', handleVisibilityChange);
+            //     } else {
+            //         document.removeEventListener('visibilitychange', handleVisibilityChange);
+            //     }
+            // });
+
+        } // isSupported
+
+
+
+
+        // $('.timer').circularCountDown({
+        // duration: {
+        // hours: 0,
+        // minutes: 0,
+        // seconds: 10
+        // },
+        // });
+        
+        // $('.timer').circularCountDown({
+        //     duration: {
+        //         hours: 0,
+        //         minutes: 0,
+        //         seconds: 10
+        //     },
+        //     end: function(){
+        //         // do something
+        //     }
+        // });
+
+        // $('.timer').circularCountDown({
+        //     size: 60,
+        //     borderSize: 10,
+        //     colorCircle: 'gray',
+        //     background: 'white',
+        //     fontFamily: 'sans-serif',
+        //     fontColor: '#333333',
+        //     fontSize: 16,
+        //     delayToFadeIn: 0,
+        //     delayToFadeOut: 0,
+        //     reverseLoading: false,
+        //     reverseRotation: false,
+        //     duration: {
+        //         hours: 0,
+        //         minutes: 0,
+        //         seconds: 10
+        //     },
+        //     beforeStart: function(){},
+        //     end: function(){}
+        // });
+    
         // Credit: Mateusz Rybczonec
     
         const FULL_DASH_ARRAY = 283;
@@ -90,17 +229,17 @@
         const ALERT_THRESHOLD = 5;
     
         const COLOR_CODES = {
-        info: {
-            color: "green"
-        },
-        warning: {
-            color: "orange",
-            threshold: WARNING_THRESHOLD
-        },
-        alert: {
-            color: "red",
-            threshold: ALERT_THRESHOLD
-        }
+            info: {
+                color: "green"
+            },
+            warning: {
+                color: "orange",
+                threshold: WARNING_THRESHOLD
+            },
+            alert: {
+                color: "red",
+                threshold: ALERT_THRESHOLD
+            }
         };
     
         const TIME_LIMIT = 1500;// 20;
@@ -110,86 +249,86 @@
         let remainingPathColor = COLOR_CODES.info.color;
     
         document.getElementById("app").innerHTML = `
-        <div class="base-timer">
-        <svg class="base-timer__svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <g class="base-timer__circle">
-            <circle class="base-timer__path-elapsed" cx="50" cy="50" r="45"></circle>
-            <path
-                id="base-timer-path-remaining"
-                stroke-dasharray="283"
-                class="base-timer__path-remaining ${remainingPathColor}"
-                d="
-                M 50, 50
-                m -45, 0
-                a 45,45 0 1,0 90,0
-                a 45,45 0 1,0 -90,0
-                "
-            ></path>
-            </g>
-        </svg>
-        <span id="base-timer-label" class="base-timer__label">${formatTime(
-            timeLeft
-        )}</span>
-        </div>
-        `;
+            <div class="base-timer">
+            <svg class="base-timer__svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <g class="base-timer__circle">
+                <circle class="base-timer__path-elapsed" cx="50" cy="50" r="45"></circle>
+                <path
+                    id="base-timer-path-remaining"
+                    stroke-dasharray="283"
+                    class="base-timer__path-remaining ${remainingPathColor}"
+                    d="
+                    M 50, 50
+                    m -45, 0
+                    a 45,45 0 1,0 90,0
+                    a 45,45 0 1,0 -90,0
+                    "
+                ></path>
+                </g>
+            </svg>
+            <span id="base-timer-label" class="base-timer__label">${formatTime(
+                timeLeft
+            )}</span>
+            </div>
+            `;
     
         startTimer();
-    
+        
         function onTimesUp() {
-        clearInterval(timerInterval);
+            clearInterval(timerInterval);
         }
-    
+        
         function startTimer() {
-        timerInterval = setInterval(() => {
-            timePassed = timePassed += 1;
-            timeLeft = TIME_LIMIT - timePassed;
-            document.getElementById("base-timer-label").innerHTML = formatTime(
-            timeLeft
-            );
-            setCircleDasharray();
-            setRemainingPathColor(timeLeft);
-    
-            if (timeLeft === 0) {
-            onTimesUp();
-            }
-        }, 1000);
+            timerInterval = setInterval(() => {
+                timePassed = timePassed += 1;
+                timeLeft = TIME_LIMIT - timePassed;
+                document.getElementById("base-timer-label").innerHTML = formatTime(
+                timeLeft
+                );
+                setCircleDasharray();
+                setRemainingPathColor(timeLeft);
+        
+                if (timeLeft === 0) {
+                onTimesUp();
+                }
+            }, 1000);
         }
-    
+        
         function formatTime(time) {
-        const minutes = Math.floor(time / 60);
-        let seconds = time % 60;
-    
-        if (seconds < 10) {
-            seconds = `0${seconds}`;
+            const minutes = Math.floor(time / 60);
+            let seconds = time % 60;
+        
+            if (seconds < 10) {
+                seconds = `0${seconds}`;
+            }
+        
+            return `${minutes}:${seconds}`;
         }
-    
-        return `${minutes}:${seconds}`;
-        }
-    
+        
         function setRemainingPathColor(timeLeft) {
-        const { alert, warning, info } = COLOR_CODES;
-        if (timeLeft <= alert.threshold) {
-            document
-            .getElementById("base-timer-path-remaining")
-            .classList.remove(warning.color);
-            document
-            .getElementById("base-timer-path-remaining")
-            .classList.add(alert.color);
-        } else if (timeLeft <= warning.threshold) {
-            document
-            .getElementById("base-timer-path-remaining")
-            .classList.remove(info.color);
-            document
-            .getElementById("base-timer-path-remaining")
-            .classList.add(warning.color);
+            const { alert, warning, info } = COLOR_CODES;
+            if (timeLeft <= alert.threshold) {
+                document
+                .getElementById("base-timer-path-remaining")
+                .classList.remove(warning.color);
+                document
+                .getElementById("base-timer-path-remaining")
+                .classList.add(alert.color);
+            } else if (timeLeft <= warning.threshold) {
+                document
+                .getElementById("base-timer-path-remaining")
+                .classList.remove(info.color);
+                document
+                .getElementById("base-timer-path-remaining")
+                .classList.add(warning.color);
+            }
         }
-        }
-    
+        
         function calculateTimeFraction() {
-        const rawTimeFraction = timeLeft / TIME_LIMIT;
-        return rawTimeFraction - (1 / TIME_LIMIT) * (1 - rawTimeFraction);
+            const rawTimeFraction = timeLeft / TIME_LIMIT;
+            return rawTimeFraction - (1 / TIME_LIMIT) * (1 - rawTimeFraction);
         }
-    
+        
         function setCircleDasharray() {
         const circleDasharray = `${(
             calculateTimeFraction() * FULL_DASH_ARRAY
