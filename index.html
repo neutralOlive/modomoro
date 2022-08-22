@@ -96,6 +96,36 @@
     <script src="NoSleep.min.js"></script>
 
     <script>
+        
+        function removeAlertLayer(savedAlertLayer) {
+            // credit: https://stackoverflow.com/questions/33424138/how-to-remove-a-div-with-fade-out-effect-in-javascript
+            speed = 2500;
+            var seconds = speed/1000;
+            savedAlertLayer.style.transition = "opacity "+seconds+"s ease";
+            savedAlertLayer.style.opacity = 0;
+            setTimeout(function() {
+                savedAlertLayer.parentNode.removeChild(savedAlertLayer);
+            }, speed);
+        }
+
+        function showSavedAlert() {
+            var savedAlertLayer = document.createElement("DIV");
+            savedAlertLayer.appendChild(document.createTextNode("No Sleep"));
+            savedAlertLayer.style.position = 'absolute';
+            savedAlertLayer.style.left = '10px';
+            savedAlertLayer.style.top = '30px';
+            savedAlertLayer.style.width = '700px';
+            savedAlertLayer.style.height = '100px';
+            savedAlertLayer.style.fontSize = "20px";
+            savedAlertLayer.style.padding = '15px';
+            savedAlertLayer.style.fontWeight = "bold";
+            savedAlertLayer.style.color = "black";
+            document.body.appendChild(savedAlertLayer);
+            setTimeout(function() {
+                removeAlertLayer(savedAlertLayer);
+            }, 1000);
+        }
+        
         // iOS: 
         // https://github.com/richtr/NoSleep.js
         var noSleep = new NoSleep();
@@ -105,6 +135,7 @@
             document.removeEventListener('click', enableNoSleep, false);
             noSleep.enable();
             console.log("noSleep enabled");
+            showSavedAlert();
         }, false);
 
         // CHROME:
